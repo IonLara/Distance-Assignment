@@ -19,7 +19,7 @@ class Distance: CustomStringConvertible, Comparable{
     
     var description: String {
         if miles == 0 && yards == 0 && feet == 0 && inches == 0 {
-            return "0\""
+            return "(0\")"
         }
         let m = miles > 0 ? "\(miles)m " : ""
         let y = yards > 0 ? "\(yards)y " : ""
@@ -42,13 +42,15 @@ class Distance: CustomStringConvertible, Comparable{
                 extraFeet = i / maxInches
                 i = i % maxInches
             }
-            if f + extraFeet >= maxFeet {
-                extraYards = (f + extraFeet) / maxFeet
-                f = (f + extraFeet) % maxFeet
+            f = f + extraFeet
+            if f >= maxFeet {
+                extraYards = f / maxFeet
+                f = f % maxFeet
             }
-            if y + extraYards >= maxYards {
-                extraMiles = (y + extraYards) / maxYards
-                y = (y + extraYards) % maxYards
+            y = y + extraYards
+            if y >= maxYards {
+                extraMiles = y / maxYards
+                y = y % maxYards
             }
             m = m + extraMiles
         }
@@ -61,14 +63,14 @@ class Distance: CustomStringConvertible, Comparable{
     
     static func +(lhs: Distance, rhs: Distance) -> Distance {
         if let answer = Distance(miles: lhs.miles + rhs.miles, yards: lhs.yards + rhs.yards, feet: lhs.feet + rhs.feet, inches: lhs.inches + rhs.inches) {
-             return Distance.simplify(answer)
+            return Distance.simplify(answer)
         }
         return Distance()!
     }
     
     static func -(lhs: Distance, rhs: Distance) -> Distance? {
         if let answer = Distance(miles: lhs.miles - rhs.miles, yards: lhs.yards - rhs.yards, feet: lhs.feet - rhs.feet, inches: lhs.inches - rhs.inches) {
-             return Distance.simplify(answer)
+            return Distance.simplify(answer)
         } else {
             return nil
         }
@@ -76,9 +78,18 @@ class Distance: CustomStringConvertible, Comparable{
     
     static func *(lhs: Distance, rhs: Int) -> Distance {
         if let answer = Distance(miles: lhs.miles * rhs, yards: lhs.yards * rhs, feet: lhs.feet * rhs, inches: lhs.inches * rhs) {
-             return Distance.simplify(answer)
+            return Distance.simplify(answer)
         }
         return Distance()!
+    }
+    
+    static func +=(lhs:Distance, rhs: Int) {
+        lhs.inches = lhs.inches + rhs
+        let sim = Distance.simplify(lhs)
+        lhs.inches = sim.inches
+        lhs.feet = sim.feet
+        lhs.yards = sim.yards
+        lhs.miles = sim.miles
     }
     
     static func <(lhs: Distance, rhs: Distance) -> Bool {
