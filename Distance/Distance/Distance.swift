@@ -25,7 +25,7 @@ class Distance: CustomStringConvertible, Comparable{
         let y = yards > 0 ? "\(yards)y " : ""
         let f = feet > 0 ? "\(feet)' " : ""
         let i = inches > 0 ? "\(inches)\"" : ""
-        return "\(m)\(y)\(f)\(i)"
+        return "(\(m)\(y)\(f)\(i))"
     }
     
     private static func simplify(_ distance: Distance) -> Distance {
@@ -61,6 +61,21 @@ class Distance: CustomStringConvertible, Comparable{
     
     static func +(lhs: Distance, rhs: Distance) -> Distance {
         if let answer = Distance(miles: lhs.miles + rhs.miles, yards: lhs.yards + rhs.yards, feet: lhs.feet + rhs.feet, inches: lhs.inches + rhs.inches) {
+             return Distance.simplify(answer)
+        }
+        return Distance()!
+    }
+    
+    static func -(lhs: Distance, rhs: Distance) -> Distance? {
+        if let answer = Distance(miles: lhs.miles - rhs.miles, yards: lhs.yards - rhs.yards, feet: lhs.feet - rhs.feet, inches: lhs.inches - rhs.inches) {
+             return Distance.simplify(answer)
+        } else {
+            return nil
+        }
+    }
+    
+    static func *(lhs: Distance, rhs: Int) -> Distance {
+        if let answer = Distance(miles: lhs.miles * rhs, yards: lhs.yards * rhs, feet: lhs.feet * rhs, inches: lhs.inches * rhs) {
              return Distance.simplify(answer)
         }
         return Distance()!
