@@ -69,8 +69,55 @@ class Distance: CustomStringConvertible, Comparable{
     }
     
     static func -(lhs: Distance, rhs: Distance) -> Distance? {
-        if let answer = Distance(miles: lhs.miles - rhs.miles, yards: lhs.yards - rhs.yards, feet: lhs.feet - rhs.feet, inches: lhs.inches - rhs.inches) {
-            return Distance.simplify(answer)
+        if lhs.miles >= rhs.miles {
+            var m = lhs.miles
+            var subM = rhs.miles
+            var y = lhs.yards
+            var subY = rhs.yards
+            var f = lhs.feet
+            var subF = rhs.feet
+            var i = lhs.inches
+            var subI = rhs.inches
+            
+            while subI > 0 {
+                if subI > i {
+                    subF += 1
+                    subI -= i
+                    i = maxInches
+                } else {
+                    i -= subI
+                    subI = 0
+                }
+            }
+            
+            while subF > 0 {
+                if subF > f {
+                    subY += 1
+                    subF -= f
+                    f = maxFeet
+                } else {
+                    f -= subF
+                    subF = 0
+                }
+            }
+            
+            while subY > 0 {
+                if subY > y {
+                    subM += 1
+                    subY -= y
+                    y = maxYards
+                } else {
+                    y -= subY
+                    subY = 0
+                }
+            }
+            
+            m -= subM
+            if let answer = Distance(miles: m, yards: y, feet: f, inches: i) {
+                return Distance.simplify(answer)
+            } else {
+                return Distance()!
+            }
         } else {
             return nil
         }

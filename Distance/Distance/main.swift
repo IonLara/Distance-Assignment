@@ -56,7 +56,6 @@ print("=================== Testing 3 ======================")
 let d1 = Distance(miles: 1, yards: 500, feet: 2, inches: 5)!
 print(d1 * 3)
 print(d1 * 5)
-print(d1 * 0)
 
 d1 += 3
 print(d1)
